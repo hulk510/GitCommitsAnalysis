@@ -37,7 +37,10 @@ namespace GitCommitsAnalysis
                 {
                     var commit = repo.Lookup<Commit>(tag.Target.Sha);
                     var commitDate = commit.Author.When.UtcDateTime.Date;
-                    analysis.Tags.Add(commitDate, tag.FriendlyName);
+                    if (!analysis.Tags.ContainsKey(commitDate))
+                    {
+                        analysis.Tags.Add(commitDate, tag.FriendlyName);
+                    }
                 }
                 foreach(var branch in repo.Branches.Where(br => br.IsRemote))
                 {
@@ -182,7 +185,7 @@ namespace GitCommitsAnalysis
             if(commitDate < analysis.FirstCommitDate)
             {
                 analysis.FirstCommitDate = commitDate;
-            } 
+            }
             else if (commitDate > analysis.LatestCommitDate)
             {
                 analysis.LatestCommitDate = commitDate;
